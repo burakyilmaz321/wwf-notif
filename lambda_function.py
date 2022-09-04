@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def handler(event, context):
+def lambda_handler(event, context):
     res = requests.get("https://wwfmarket.com/collections/basic-koleksiyonu")
     html_doc = res.text
     soup = BeautifulSoup(html_doc, "html.parser")
@@ -22,4 +22,9 @@ def handler(event, context):
         p for p in desired_products
         if products.get(p) and products.get(p).get("M")
     ]
-    return notifications
+    response = {
+        "sendNotification": any(notifications),
+        "notifications": notifications,
+    }
+    print("Response:", response)
+    return response
